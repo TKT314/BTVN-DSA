@@ -1,0 +1,150 @@
+#include <iostream>
+#include <time.h>
+#include <cstdlib>
+#include <vector>
+#include <chrono>
+#include <algorithm>
+using namespace std;
+const int N=100000;
+ vector <float> a(N),b(N),c(N),d(N),e(N),f(N),g(N),h(N);
+void  clgt( vector <float> &a)
+ {
+     for(float &v:a)
+     {
+         v=(rand()%4000000);
+     }
+ }
+ void bb( vector<float>&b)
+ {
+     for(int i=0;i<b.size();i++)
+        b[i]=i;
+ }
+ void cc(vector<float>&c)
+ {
+     for(int i=0;i<b.size();i++)
+        c[i]=N-i;
+ }
+ int partition (vector<float>&d, int low, int high)
+{
+    int pivot = d[high];    // pivot
+    int left = low;
+    int right = high - 1;
+    while(true){
+        while(left <= right && d[left] < pivot) left++;
+        while(right >= left && d[right] > pivot) right--;
+        if (left >= right) break;
+        swap(d[left], d[right]);
+        left++;
+        right--;
+    }
+    swap(d[left], d[high]);
+    return left;
+}
+void QuickSort(vector<float>&d,int low, int high)
+{
+    if (low < high)
+    {
+        int pi = partition(d, low, high);
+        QuickSort(d, low, pi - 1);
+        QuickSort(d, pi + 1, high);
+    }
+}
+void heapify(vector <float>&e, int N, int i)
+{
+    int largest = i;
+    int l = 2 * i + 1;
+    int r = 2 * i + 2;
+    if (l < N && e[l] > e[largest])
+        largest = l;
+        if (r < N && e[r] > e[largest])
+        largest = r;
+        if (largest != i) {
+        swap(e[i], e[largest]);
+           heapify(e, N, largest);
+    }
+}
+void heapSort(vector <float>&e, int N)
+{
+    for (int i = N / 2 - 1; i >= 0; i--)
+        heapify(e, N, i);
+
+
+    for (int i = N - 1; i > 0; i--) {
+        swap(e[0], e[i]);
+        heapify(e, i, 0);
+    }
+}
+void merge(vector <float>&f, int const left, int const mid,
+           int const right)
+           {
+               auto const subArrayOne = mid - left + 1;
+    auto const subArrayTwo = right - mid;
+    auto *leftArray = new int[subArrayOne],
+         *rightArray = new int[subArrayTwo];
+          for (auto i = 0; i < subArrayOne; i++)
+        leftArray[i] = f[left + i];
+    for (auto j = 0; j < subArrayTwo; j++)
+        rightArray[j] = f[mid + 1 + j];
+         auto indexOfSubArrayOne = 0,
+         indexOfSubArrayTwo = 0;
+         int indexOfMergedArray = left;
+         while (indexOfSubArrayOne < subArrayOne &&
+           indexOfSubArrayTwo < subArrayTwo)
+    {
+        if (leftArray[indexOfSubArrayOne] <=
+            rightArray[indexOfSubArrayTwo])
+        {
+            f[indexOfMergedArray] =
+            leftArray[indexOfSubArrayOne];
+            indexOfSubArrayOne++;
+        }
+        else
+        {
+            f[indexOfMergedArray] =
+            rightArray[indexOfSubArrayTwo];
+            indexOfSubArrayTwo++;
+        }
+        indexOfMergedArray++;
+    }
+     while (indexOfSubArrayOne < subArrayOne)
+    {
+        f[indexOfMergedArray] =
+        leftArray[indexOfSubArrayOne];
+        indexOfSubArrayOne++;
+        indexOfMergedArray++;
+    }
+    while (indexOfSubArrayTwo < subArrayTwo)
+    {
+        f[indexOfMergedArray] =
+        rightArray[indexOfSubArrayTwo];
+        indexOfSubArrayTwo++;
+        indexOfMergedArray++;
+    }
+           }
+void mergeSort(vector <float> &f, int const begin,
+               int const end)
+               {
+                   if (begin >= end)
+        return;
+
+    auto mid = begin + (end - begin) / 2;
+    mergeSort(f, begin, mid);
+    mergeSort(f, mid + 1, end);
+    merge(f, begin, mid, end);
+               }
+
+int main()
+ {
+using namespace std::chrono;
+      cc(a);
+      high_resolution_clock::time_point t1 = high_resolution_clock::now();
+
+    high_resolution_clock::time_point t2 = high_resolution_clock::now();
+  duration<double> time_span = duration_cast<duration<double>>(t2 - t1);
+
+  std::cout << "It took me " << time_span.count() << " seconds.";
+  mergeSort(a,0,N-1);
+      for(float &v:a){
+        cout<<v<<" ";}
+     return 0;
+ }
